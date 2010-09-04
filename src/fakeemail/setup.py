@@ -10,7 +10,7 @@ setup(
     packages = ['fakeemail'],
     install_requires = [
         'Twisted',
-    ]
+    ],
 
     entry_points = {
         'console_scripts' : [
