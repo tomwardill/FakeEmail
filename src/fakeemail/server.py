@@ -1,5 +1,6 @@
 from zope.interface import implements
 
+from twisted.application import internet
 from twisted.internet import defer, protocol
 from twisted.mail import smtp
 from twisted.mail.mail import MailService
@@ -60,5 +61,5 @@ class Options(usage.Options):
 def makeService(config):
     smtpServerFactory = WebMessageESMTPFactory()
 
-    return internet.TCPserver(2025, smtpServerFactory)
+    return internet.TCPServer(2025, smtpServerFactory)
 
