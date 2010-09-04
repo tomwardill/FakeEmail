@@ -2,7 +2,7 @@ from twisted.application.service import ServiceMaker
  
 Sample = ServiceMaker(
     "fakeemail",
-    "fakeemail.tap",
+    "fakeemail.server",
     "Fake Email server",
     "fakeemail"
 )
