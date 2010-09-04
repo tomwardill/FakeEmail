@@ -7,11 +7,11 @@ setup(
     author_email = 'tom@howrandom.net',
 
     zip_safe = True,
-    packages = ['fakeemail'],
+    packages = ['fakeemail', 'twisted.plugins'],
     install_requires = [
         'Twisted',
     ],
-
+    package_data={'twisted': ['plugins/fakeemail.py']},
     entry_points = {
         'console_scripts' : [
             'start = fakeemail.server:start'
