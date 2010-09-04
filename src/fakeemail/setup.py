@@ -14,7 +14,7 @@ setup(
 
     entry_points = {
         'console_scripts' : [
-            'start = server:start'
+            'start = fakeemail.server:start'
         ]
     }
 )
