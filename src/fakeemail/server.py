@@ -9,6 +9,9 @@ from twisted.python import usage
 class WebMessageDelivery:
     implements(smtp.IMessageDelivery)
 
+    def __init__(self, parent):
+        self.parent = parent
+
     def receivedHeader(self, helo, origin, recipients):
         return "Recieved: MessageDelivery"
 
@@ -18,21 +21,25 @@ class WebMessageDelivery:
 
     def validateTo(self, user):
         # take any to
-        return lambda: WebMessage()
+        return lambda: WebMessage(self)
+
+    def addMessage(self, message):
+        self.parent.addMessage(message)
 
 
 class WebMessage:
     implements(smtp.IMessage)
 
-    def __init__(self):
+    def __init__(self, parent):
         self.lines = []
+        self.parent = parent
 
     def lineReceived(self, line):
         self.lines.append(line)
 
     def eomReceived(self):
-        print "New message received:"
-        print "\n".join(self.lines)
+        message = "\n".join(self.lines)
+        self.parent.addMessage(message)
         self.lines = None
         return defer.succeed(None)
 
@@ -43,15 +50,25 @@ class WebMessage:
 class WebMessageDeliveryFactory(object):
     implements(smtp.IMessageDeliveryFactory)
 
+    def __init__(self, parent):
+        self.parent = parent
+
     def getMessageDelivery(self):
-        return WebMessageDelivery()
+        return WebMessageDelivery(self)
+
+    def addMessage(self, message):
+        self.parent.messages.append(message)
+        print self.parent.messages
 
 class WebMessageESMTPFactory(protocol.ServerFactory):
     protocol = smtp.ESMTP
 
+    messages = []
+
     def buildProtocol(self, addr):
         p = self.protocol()
-        p.deliveryFactory = WebMessageDeliveryFactory()
+        p.deliveryFactory = WebMessageDeliveryFactory(self)
+        p.deliveryFactory.factory = self
         p.factory = self
         return p
 
