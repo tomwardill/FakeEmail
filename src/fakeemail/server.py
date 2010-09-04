@@ -3,6 +3,7 @@ from zope.interface import implements
 from twisted.internet import defer, protocol
 from twisted.mail import smtp
 from twisted.mail.mail import MailService
+from twisted.python import usage
 
 class WebMessageDelivery:
     implements(smtp.IMessageDelivery)
