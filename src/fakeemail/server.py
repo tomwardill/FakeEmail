@@ -1,16 +1,28 @@
 from zope.interface import implements
 
-from twisted.application import internet
+from twisted.application import internet, service
 from twisted.internet import defer, protocol
 from twisted.mail import smtp
-from twisted.mail.mail import MailService
 from twisted.python import usage
+
+from twisted.web.server import Site
+from twisted.web.resource import Resource
+
+class WebMessageStorage(object):
+
+    messages = {}
+
+    def addMessage(self, to, message):
+        if self.messages.has_key('to'):
+            self.messages[to.dest].append(message)
+        else:
+            self.messages[to.dest] = [message]
 
 class WebMessageDelivery:
     implements(smtp.IMessageDelivery)
 
-    def __init__(self, parent):
-        self.parent = parent
+    def __init__(self, storage):
+        self.storage = storage
 
     def receivedHeader(self, helo, origin, recipients):
         return "Recieved: MessageDelivery"
@@ -21,25 +33,23 @@ class WebMessageDelivery:
 
     def validateTo(self, user):
         # take any to
-        return lambda: WebMessage(self)
-
-    def addMessage(self, message):
-        self.parent.addMessage(message)
+        return lambda: WebMessage(self.storage, user)
 
 
 class WebMessage:
     implements(smtp.IMessage)
 
-    def __init__(self, parent):
+    def __init__(self, storage, user):
         self.lines = []
-        self.parent = parent
+        self.storage = storage
+        self.user = user
 
     def lineReceived(self, line):
         self.lines.append(line)
 
     def eomReceived(self):
         message = "\n".join(self.lines)
-        self.parent.addMessage(message)
+        self.storage.addMessage(self.user, message)
         self.lines = None
         return defer.succeed(None)
 
@@ -50,33 +60,54 @@ class WebMessage:
 class WebMessageDeliveryFactory(object):
     implements(smtp.IMessageDeliveryFactory)
 
-    def __init__(self, parent):
-        self.parent = parent
+    def __init__(self, storage):
+        self.storage = storage
 
     def getMessageDelivery(self):
-        return WebMessageDelivery(self)
+        return WebMessageDelivery(self.storage)
 
-    def addMessage(self, message):
-        self.parent.messages.append(message)
-        print self.parent.messages
 
 class WebMessageESMTPFactory(protocol.ServerFactory):
     protocol = smtp.ESMTP
 
-    messages = []
+    storage = None
+
+    def __init__(self, storage):
+        self.storage = storage
 
     def buildProtocol(self, addr):
         p = self.protocol()
-        p.deliveryFactory = WebMessageDeliveryFactory(self)
-        p.deliveryFactory.factory = self
+        p.deliveryFactory = WebMessageDeliveryFactory(self.storage)
         p.factory = self
         return p
 
 class Options(usage.Options):
     pass
 
-def makeService(config):
-    smtpServerFactory = WebMessageESMTPFactory()
+class WebMessageDisplay(Resource):
 
-    return internet.TCPServer(2025, smtpServerFactory)
+    def __init__(self, name):
+        Resource.__init__(self)
+        self.name = name
+
+    def render_GET(self, request):
+        return "<html><body><pre>%s</pre></body></html>" % (self.name,)
+
+class WebMessageRouter(Resource):
+    def getChild(self, name, request):
+        return
+
+def makeService(config):
+
+    storage = WebMessageStorage()
+
+    smtpServerFactory = WebMessageESMTPFactory(storage)
+
+
+    s = service.MultiService()
+
+    smtpService = internet.TCPServer(2025, smtpServerFactory)
+    smtpService.setServiceParent(s)
+
+    return s
 
