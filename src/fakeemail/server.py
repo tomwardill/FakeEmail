@@ -86,28 +86,39 @@ class Options(usage.Options):
 
 class WebMessageDisplay(Resource):
 
-    def __init__(self, name):
+    def __init__(self, name, storage):
         Resource.__init__(self)
         self.name = name
+        self.storage = storage
 
     def render_GET(self, request):
-        return "<html><body><pre>%s</pre></body></html>" % (self.name,)
+        if self.storage.has_key(self.name):
+            return "<html><body><pre>%s</pre></body></html>" % (self.storage[self.name],)
+        else:
+            return "<html><body><pre>No emails recorded</pre></body></html>"
 
 class WebMessageRouter(Resource):
+
+    def __init__(self, storage):
+        self.storage = storage
+
     def getChild(self, name, request):
-        return
+        return WebMessageDisplay(name, self.storage)
 
 def makeService(config):
 
     storage = WebMessageStorage()
 
-    smtpServerFactory = WebMessageESMTPFactory(storage)
-
-
     s = service.MultiService()
 
+    smtpServerFactory = WebMessageESMTPFactory(storage)
     smtpService = internet.TCPServer(2025, smtpServerFactory)
     smtpService.setServiceParent(s)
+
+    root = WebMessageRouter(storage)
+    siteFactory = Site(root)
+    webService = internet.TCPServer(8000, siteFactory)
+    webService.setServiceParent(s)
 
     return s
 
