@@ -11,9 +11,11 @@ class WebMessageDisplay(Resource):
 
     def render_GET(self, request):
         
-        email_list = self.storage.get_for_name(self.name)
-        email_list = zip(range(len(email_list)), email_list)
         if self.storage.get_for_name(self.name):
+
+            email_list = self.storage.get_for_name(self.name)
+            email_list = zip(range(len(email_list)), email_list)
+            
             html_string = "<html><body>"
             
             # add quick nav bar
