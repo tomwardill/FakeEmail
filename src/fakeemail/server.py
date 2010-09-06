@@ -27,6 +27,9 @@ class WebMessageStorage(object):
     
     def get_all_names(self):
         return self.messages.keys()
+    
+    def clear_all(self):
+        self.messages = {}
 
 class WebMessageDelivery:
     implements(smtp.IMessageDelivery)
@@ -121,8 +124,12 @@ class WebMessageRootDisplay(Resource):
         html_string =  "<html><body><ul>"
         for name in self.storage.get_all_names():
             html_string += "<li><a href='%s'>%s</a></li>" % (name, name, )
-        html_string += "</ul></body></html>"
+        html_string += "</ul><form action='.' method='POST'><input type='submit' value='Clear All'></form></body></html>"
         return html_string
+    
+    def render_POST(self, request):
+        self.storage.clear_all()
+        return "<html><body>Cleared</body></html>"
 
 class WebMessageRouter(Resource):
 
