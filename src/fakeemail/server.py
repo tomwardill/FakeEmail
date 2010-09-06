@@ -32,9 +32,9 @@ class WebMessageStorage(object):
 
 
 class Options(usage.Options):
-    optFlags = [
-        ["smtp_port", "s", "SMTP Server Port"],
-        ["web_port", "w", "Web Server Port"],
+    optParameters = [
+        ["smtp_port", "s", 2025, "SMTP Server Port"],
+        ["web_port", "w", 8000 ,"Web Server Port"],
         ]
     
 
