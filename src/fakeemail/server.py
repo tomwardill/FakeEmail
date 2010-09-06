@@ -44,8 +44,8 @@ def makeService(config):
 
     s = service.MultiService()
 
-    smtp_port = config.get('smtp_port') if config.get('smtp_port') else 2025
-    web_port = config.get('web_port') if config.get('web_port') else 8000
+    smtp_port = int(config.get('smtp_port'))
+    web_port = int(config.get('web_port'))
     
     smtpService = makeSMTPService(smtp_port, storage)
     smtpService.setServiceParent(s)
