@@ -25,6 +25,9 @@ class WebMessageStorage(object):
     
     def get_all_names(self):
         return self.messages.keys()
+
+    def get_count(self, name):
+        return len(self.messages[name])
     
     def clear_all(self):
         self.messages = {}

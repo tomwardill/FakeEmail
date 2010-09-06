@@ -28,7 +28,7 @@ class WebMessageRootDisplay(Resource):
     def render_GET(self, request):
         html_string =  "<html><body><ul>"
         for name in self.storage.get_all_names():
-            html_string += "<li><a href='%s'>%s</a></li>" % (name, name, )
+            html_string += "<li>(%s) <a href='%s'>%s</a></li>" % ( self.storage.get_count(name), name, name, )
         html_string += "</ul><form action='.' method='POST'><input type='submit' value='Clear All'></form></body></html>"
         return html_string
     
