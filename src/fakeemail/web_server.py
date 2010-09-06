@@ -21,7 +21,7 @@ class WebMessageDisplay(Resource):
             # add quick nav bar
             html_string += "<div>"
             for num, email in email_list:
-                html_string += "<a href='#%s'>%s</a>" % (str(num), str(num))
+                html_string += "<a href='#%s'>%s</a> | " % (str(num), str(num))
             html_string += "</div>"
             
             html_string += "<ul>"
