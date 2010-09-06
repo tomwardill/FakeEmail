@@ -10,10 +10,21 @@ class WebMessageDisplay(Resource):
         self.storage = storage
 
     def render_GET(self, request):
+        
+        email_list = self.storage.get_for_name(self.name)
+        email_list = zip(range(len(email_list)), email_list)
         if self.storage.get_for_name(self.name):
-            html_string = "<html><body><ul>"
-            for email in self.storage.get_for_name(self.name):
-                html_string += "<li><pre>%s</pre></li>" % (email, )
+            html_string = "<html><body>"
+            
+            # add quick nav bar
+            html_string += "<div>"
+            for num, email in email_list:
+                html_string += "<a href='#%s'>%s</a>" % (str(num), str(num))
+            html_string += "</div>"
+            
+            html_string += "<ul>"
+            for num, email in email_list:
+                html_string += "<a name='%s'><li><pre>%s</pre></a></li>" % (num, email, )
             html_string += "</ul></body></html>"
             return html_string
         else:
