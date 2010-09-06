@@ -24,6 +24,9 @@ class WebMessageStorage(object):
         if self.messages.has_key(name):
             return self.messages[name]
         return None
+    
+    def get_all_names(self):
+        return self.messages.keys()
 
 class WebMessageDelivery:
     implements(smtp.IMessageDelivery)
@@ -103,6 +106,19 @@ class WebMessageDisplay(Resource):
             return "<html><body><pre>%s</pre></body></html>" % (self.storage.get_for_name(self.name),)
         else:
             return "<html><body><pre>No emails recorded</pre></body></html>"
+        
+class WebMessageRootDisplay(Resource):
+    
+    def __init__(self, name, storage):
+        Resource.__init__(self)
+        self.storage = storage
+        
+    def render_GET(self, request):
+        html_string =  "<html><body><ul>"
+        for name in self.storage.get_all_names():
+            html_string += "<li><a href='%s'>%s</a></li>" % (name, name, )
+        html_string += "</ul></body></html>"
+        return html_string
 
 class WebMessageRouter(Resource):
 
@@ -111,7 +127,10 @@ class WebMessageRouter(Resource):
         self.storage = storage
 
     def getChild(self, name, request):
-        return WebMessageDisplay(name, self.storage)
+        if name:
+            return WebMessageDisplay(name, self.storage)
+        else:
+            return WebMessageRootDisplay(name, self.storage)
 
 def makeService(config):
 
