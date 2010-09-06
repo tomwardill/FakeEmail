@@ -36,6 +36,8 @@ Use these options as shown below::
   
 Note that to run the SMTP listener on port 25 (the standard SMTP port), you may need to start the daemon with root privileges.
 
+Once the server is running, direct any email at the port that you specified, and then load up http://<servername>:webport (http://localhost:8000 for example)
+
 Dependencies
 ------------
 
