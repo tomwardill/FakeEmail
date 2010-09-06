@@ -13,7 +13,7 @@ class WebMessageStorage(object):
     messages = {}
 
     def addMessage(self, to, message):
-        if self.messages.has_key('to'):
+        if self.messages.has_key(str(to.dest)):
             self.messages[str(to.dest)].append(message)
         else:
             self.messages[str(to.dest)] = [message]
@@ -103,7 +103,11 @@ class WebMessageDisplay(Resource):
 
     def render_GET(self, request):
         if self.storage.get_for_name(self.name):
-            return "<html><body><pre>%s</pre></body></html>" % (self.storage.get_for_name(self.name),)
+            html_string = "<html><body><ul>"
+            for email in self.storage.get_for_name(self.name):
+                html_string += "<li><pre>%s</pre></li>" % (email, )
+            html_string += "</ul></body></html>"
+            return html_string
         else:
             return "<html><body><pre>No emails recorded</pre></body></html>"
         
