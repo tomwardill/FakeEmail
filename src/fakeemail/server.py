@@ -95,7 +95,11 @@ class WebMessageESMTPFactory(protocol.ServerFactory):
         return p
 
 class Options(usage.Options):
-    pass
+    optFlags = [
+        ["smtp_port", "s", "SMTP Server Port"],
+        ["web_port", "w", "Web Server Port"],
+        ]
+    
 
 class WebMessageDisplay(Resource):
 
@@ -149,13 +153,16 @@ def makeService(config):
 
     s = service.MultiService()
 
+    smtp_port = config.get('smtp_port') if config.get('smtp_port') else 2025
+    web_port = config.get('web_port') if config.get('web_port') else 8000
+    
     smtpServerFactory = WebMessageESMTPFactory(storage)
-    smtpService = internet.TCPServer(2025, smtpServerFactory)
+    smtpService = internet.TCPServer(smtp_port, smtpServerFactory)
     smtpService.setServiceParent(s)
 
     root = WebMessageRouter(storage)
     siteFactory = Site(root)
-    webService = internet.TCPServer(8000, siteFactory)
+    webService = internet.TCPServer(web_port, siteFactory)
     webService.setServiceParent(s)
 
     return s
