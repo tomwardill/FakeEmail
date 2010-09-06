@@ -38,6 +38,10 @@ Note that to run the SMTP listener on port 25 (the standard SMTP port), you may 
 
 Once the server is running, direct any email at the port that you specified, and then load up http://<servername>:webport (http://localhost:8000 for example)
 
+Run the server in the background and output to a log file::
+
+  bin/twistd -l foo.log fakeemail
+
 Dependencies
 ------------
 
