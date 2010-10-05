@@ -54,6 +54,15 @@ class WebMessageRouter(Resource):
 
     def getChild(self, name, request):
         if name:
+            if name == 'data':
+                split_name = request.path.split('/')
+                
+                # trying to get /data/<something
+                if len(split_name) > 2:
+                    return WebDataMessageDisplay(split_name[1], self.storage)
+                # trying to get to /data
+                return WebDataRootDisplay('', self.storage)
+            
             return WebMessageDisplay(name, self.storage)
         else:
             return WebMessageRootDisplay(name, self.storage)
