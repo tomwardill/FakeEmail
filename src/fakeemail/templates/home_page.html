@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <ul>
+        {% for count, name in address_list %}
+        <li>({{ count }}) - <a href='{{ name }}'>{{ name }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <form action='.' method='POST'><input type='submit' value='Clear All'></form>
+{% endblock %}

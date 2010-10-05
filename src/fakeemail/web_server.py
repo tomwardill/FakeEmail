@@ -2,6 +2,8 @@ from twisted.web.server import Site
 from twisted.web.resource import Resource
 from twisted.application import internet, service
 
+from jinja2 import Environment, PackageLoader
+
 class WebMessageDisplay(Resource):
 
     def __init__(self, name, storage):
@@ -11,26 +13,12 @@ class WebMessageDisplay(Resource):
 
     def render_GET(self, request):
         
-        if self.storage.get_for_name(self.name):
-
-            email_list = self.storage.get_for_name(self.name)
-            email_list = zip(range(len(email_list)), email_list)
-            
-            html_string = "<html><body>"
-            
-            # add quick nav bar
-            html_string += "<div>"
-            for num, email in email_list:
-                html_string += "<a href='#%s'>%s</a> | " % (str(num), str(num))
-            html_string += "</div>"
-            
-            html_string += "<ul>"
-            for num, email in email_list:
-                html_string += "<a name='%s'><li><pre>%s</pre></a></li>" % (num, email, )
-            html_string += "</ul></body></html>"
-            return html_string
-        else:
-            return "<html><body><pre>No emails recorded</pre></body></html>"
+        data = {'email_list' : self.storage.get_for_name(self.name)}
+        
+        env = Environment(loader = PackageLoader('fakeemail', 'templates'))
+        template = env.get_template('message_display.html')
+        
+        return template.render(data).encode('utf-8')
         
 class WebMessageRootDisplay(Resource):
     
@@ -38,17 +26,24 @@ class WebMessageRootDisplay(Resource):
         Resource.__init__(self)
         self.storage = storage
         
-    def render_GET(self, request):
-        html_string =  "<html><body><ul>"
-        for name in self.storage.get_all_names():
-            html_string += "<li>(%s) <a href='%s'>%s</a></li>" % ( self.storage.get_count(name), name, name, )
-        html_string += "</ul><form action='.' method='POST'><input type='submit' value='Clear All'></form></body></html>"
-        return html_string
+    def internal_render(self, user_message = None):
+        address_list = [ [self.storage.get_count(name), name] for name in self.storage.get_all_names()]
+        data = {'address_list': address_list, 'user_message': user_message}
+        
+        env = Environment(loader = PackageLoader('fakeemail', 'templates'))
+        template = env.get_template('home_page.html')
+        
+        return template.render(data).encode('utf-8')
+        
+    def render_GET(self, request, user_message = None):
+        
+        return self.internal_render()
+        
     
     def render_POST(self, request):
         self.storage.clear_all()
-        return "<html><body>Cleared</body></html>"
-
+        return self.internal_render('Data Cleared')
+    
 class WebMessageRouter(Resource):
 
     def __init__(self, storage):

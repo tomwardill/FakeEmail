@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+    {% if email_list %}
+    
+        {% for message in email_list %}
+            <a href='#{{ loop.index }}'>{{ loop.index }}</a>
+        {% endfor %}
+    
+        <ol>
+            {% for message in email_list %}
+                <li><a name='{{ loop.index }}'><pre>{{ message }}</pre></li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <pre>No emails recorded for this address</pre>
+    {% endif %}
+
+{% endblock %}
