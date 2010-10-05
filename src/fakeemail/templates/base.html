@@ -15,5 +15,9 @@
     
         {% block content %}
         {% endblock %}
+        
+        {% if address_name %}
+        Access data api at <a href="/data/{{ address_name }}">/data/{{ address_name }}</a>
+        {% endif %}
     </body>
 </html>
