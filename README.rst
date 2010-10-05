@@ -45,5 +45,8 @@ Run the server in the background and output to a log file::
 Dependencies
 ------------
 
+The dependencies will be installed through the egg/buildout, but if you require them to be system installed, they are listed below:
+
  * twisted
+ * jinja2
  * python (2.4+)
