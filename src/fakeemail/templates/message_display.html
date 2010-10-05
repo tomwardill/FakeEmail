@@ -9,9 +9,11 @@
 
     {% if email_list %}
     
+        <div id="nav">
         {% for message in email_list %}
             <a href='#{{ loop.index }}'>{{ loop.index }}</a>
         {% endfor %}
+        </div>
     
         <ol>
             {% for message in email_list %}
