@@ -13,7 +13,9 @@ class WebMessageDisplay(Resource):
 
     def render_GET(self, request):
         
-        data = {'email_list' : self.storage.get_for_name(self.name)}
+        data = {'email_list' : self.storage.get_for_name(self.name),
+                'address_name' : self.name,
+                }
         
         env = Environment(loader = PackageLoader('fakeemail', 'templates'))
         template = env.get_template('message_display.html')
