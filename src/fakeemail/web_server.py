@@ -4,6 +4,11 @@ from twisted.application import internet, service
 
 from jinja2 import Environment, PackageLoader
 
+try:
+    import json
+except:
+        import simplejson as json
+
 class WebMessageDisplay(Resource):
 
     def __init__(self, name, storage):
@@ -62,7 +67,10 @@ class WebDataMessageDisplay(Resource):
         env = Environment(loader = PackageLoader('fakeemail', 'templates'))
         template = env.get_template('data_message_display.html')
         
-        return template.render(data).encode('utf-8')
+        data_dump = {'data': json.dumps(data)}
+        
+        return template.render(data_dump).encode('utf-8')
+    
     
 class WebDataRootDisplay(Resource):
     
@@ -70,14 +78,16 @@ class WebDataRootDisplay(Resource):
         Resource.__init__(self)
         self.storage = storage
         
-    def internal_render(self, user_message = None):
+    def internal_render(self, user_message = ''):
         address_list = [ [self.storage.get_count(name), name] for name in self.storage.get_all_names()]
         data = {'address_list': address_list, 'user_message': user_message}
         
         env = Environment(loader = PackageLoader('fakeemail', 'templates'))
         template = env.get_template('data_home_page.html')
         
-        return template.render(data).encode('utf-8')
+        data_dump = {'data':json.dumps(data)}
+        
+        return template.render(data_dump).encode('utf-8')
         
     def render_GET(self, request, user_message = None):
         
@@ -86,6 +96,9 @@ class WebDataRootDisplay(Resource):
     def render_POST(self, request):
         self.storage.clear_all()
         return self.internal_render('Data Cleared')
+    
+    def getChild(self, name, request):
+        return WebDataMessageDisplay(name, self.storage)
     
 class WebMessageRouter(Resource):
 
@@ -96,12 +109,6 @@ class WebMessageRouter(Resource):
     def getChild(self, name, request):
         if name:
             if name == 'data':
-                split_name = request.path.split('/')
-                
-                # trying to get /data/<something
-                if len(split_name) > 2:
-                    return WebDataMessageDisplay(split_name[1], self.storage)
-                # trying to get to /data
                 return WebDataRootDisplay('', self.storage)
             
             return WebMessageDisplay(name, self.storage)
