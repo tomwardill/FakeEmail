@@ -1,3 +1,5 @@
+import email
+
 from twisted.web.server import Site
 from twisted.web.resource import Resource
 from twisted.application import internet, service
@@ -17,8 +19,20 @@ class WebMessageDisplay(Resource):
         self.storage = storage
 
     def render_GET(self, request):
-        
-        data = {'email_list' : self.storage.get_for_name(self.name),
+        email_list = self.storage.get_for_name(self.name)
+        decoded_email_list = []
+        for mail in email_list:
+            parts = []
+            parts.append(mail)
+            msg = email.message_from_string(mail)
+            for part in msg.walk():
+                # multipart/* are just containers
+                if part.get_content_maintype() == 'multipart':
+                    continue
+                parts.append(part.get_payload(decode=True))
+            decoded_email_list.append(parts)
+
+        data = {'email_list' : decoded_email_list,
                 'address_name' : self.name,
                 }
         

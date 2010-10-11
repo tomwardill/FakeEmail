@@ -16,8 +16,17 @@
         </div>
     
         <ol>
-            {% for message in email_list %}
-                <li><a name='{{ loop.index }}'><pre>{{ message }}</pre></li>
+            {% for msg in email_list %}
+                <li>
+                    <a name='{{ loop.index }}'>#</a>
+                    <ul>
+                        {% for part in msg %}
+                            <li>
+                                <pre>{{ part }}</pre>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
             {% endfor %}
         </ol>
     {% else %}
