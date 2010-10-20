@@ -21,16 +21,17 @@ class WebMessageDisplay(Resource):
     def render_GET(self, request):
         email_list = self.storage.get_for_name(self.name)
         decoded_email_list = []
-        for mail in email_list:
-            parts = []
-            parts.append(mail)
-            msg = email.message_from_string(mail)
-            for part in msg.walk():
-                # multipart/* are just containers
-                if part.get_content_maintype() == 'multipart':
-                    continue
-                parts.append(part.get_payload(decode=True))
-            decoded_email_list.append(parts)
+        if email_list:
+            for mail in email_list:
+                parts = []
+                parts.append(mail)
+                msg = email.message_from_string(mail)
+                for part in msg.walk():
+                    # multipart/* are just containers
+                    if part.get_content_maintype() == 'multipart':
+                        continue
+                    parts.append(part.get_payload(decode=True))
+                decoded_email_list.append(parts)
 
         data = {'email_list' : decoded_email_list,
                 'address_name' : self.name,
