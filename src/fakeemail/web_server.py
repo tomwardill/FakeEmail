@@ -25,7 +25,7 @@ class WebMessageDisplay(Resource):
         env = Environment(loader = PackageLoader('fakeemail', 'templates'))
         template = env.get_template('message_display.html')
         
-        return template.render(data).encode('utf-8')
+        return template.render(data).encode('UTF-8')
         
 class WebMessageRootDisplay(Resource):
     

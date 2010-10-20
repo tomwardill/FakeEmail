@@ -11,12 +11,12 @@ class WebMessageStorage(object):
     messages = {}
 
     def addMessage(self, to, message):
-        if self.messages.has_key(str(to.dest)):
-            self.messages[str(to.dest)].append(message)
+        if self.messages.has_key(unicode(to.dest)):
+            self.messages[unicode(to.dest)].append(message.decode('UTF-8'))
         else:
-            self.messages[str(to.dest)] = [message]
+            self.messages[unicode(to.dest)] = [message.decode('UTF-8')]
             
-        print self.messages
+        print "Message stored for: " + unicode(to.dest)
         
     def get_for_name(self, name):
         if self.messages.has_key(name):
