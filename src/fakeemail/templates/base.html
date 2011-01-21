@@ -8,32 +8,40 @@
             $().ready(function(){
                 $('#pretty').click(function() {
                     if ($('#pretty:checked').val() !== undefined) {
+                        $('li.part').prepend('<span class="part">&darr;</a>');
+                        $('span.part').click(function() {
+                            $(this).parent().children('div.part').toggle();
+                        });
                         $('div.part').hide();
                         $('div.part').css('width', '900');
                         $('div.part').css('font-family', 'sans, arial, sans-serif');
+                        $('div.part').css('white-space', 'normal');
+                        $('div.part').css('border', '1px solid c0c0c0');
                     }
                     else {
+                        $('span.part').remove();
                         $('div.part').show();
                         $('div.part').css('width', '100%');
                         $('div.part').css('font-family', '');
+                        $('div.part').css('white-space', 'pre');
+                        $('div.part').css('border', '');
                     }
                 });
 
-                $('a').click(function() {
-                    if ($('#pretty:checked').val() !== undefined) {
-                        $(this).children('.part').toggle();
-                    }
-                });
             });
         </script>
         <style type="text/css">
-            div.part {
-                width: 900px; 
-                font-family: sans, sans-serif;
+            body {
+                font-family: monospace;
             }
 
-            li.part {
-                border: 1px solid #c0c0c0;
+            span.part {
+                color: red;
+                font-size: 24pt;
+            }
+
+            div.part {
+                white-space: pre;
             }
         </style>
     </head>

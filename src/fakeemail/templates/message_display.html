@@ -13,6 +13,8 @@
         {% for message in email_list %}
             <a href='#{{ loop.index }}'>{{ loop.index }}</a>
         {% endfor %}
+        </div>
+        <div>
         <label for="pretty">Pretty-mode?</label><input id="pretty" type="checkbox" />
         </div>
     
@@ -22,7 +24,6 @@
                     <a name='{{ loop.index }}'>#</a>
                     <ul>
                         {% for part in msg %}
-                        <a href="#" id="part">&darr;</a>
                             <li class="part">
                                 <div class="part">{{ part }}</div>
                             </li>
