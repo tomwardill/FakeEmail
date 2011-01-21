@@ -31,7 +31,7 @@ class WebMessageDisplay(Resource):
                     # multipart/* are just containers
                     if part.get_content_maintype() == 'multipart':
                         continue
-                    parts.append(base64.decode(part.get_payload()))
+                    parts.append(base64.decodestring(part.get_payload()))
                 decoded_email_list.append(parts)
 
         data = {'email_list' : decoded_email_list,
