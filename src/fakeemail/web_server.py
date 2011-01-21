@@ -26,7 +26,7 @@ class WebMessageDisplay(Resource):
             for mail in email_list:
                 parts = []
                 parts.append(mail)
-                msg = email.message_from_string(mail)
+                msg = email.message_from_string(mail.encode())
                 for part in msg.walk():
                     # multipart/* are just containers
                     if part.get_content_maintype() == 'multipart':
