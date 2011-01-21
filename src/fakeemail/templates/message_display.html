@@ -21,8 +21,8 @@
                     <a name='{{ loop.index }}'>#</a>
                     <ul>
                         {% for part in msg %}
-                            <li>
-                                <pre>{{ part }}</pre>
+                            <li class="part">
+                                <div class="part" style="">{{ part }}</div>
                             </li>
                         {% endfor %}
                     </ul>
