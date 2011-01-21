@@ -1,4 +1,5 @@
 import email
+import base64
 
 from twisted.web.server import Site
 from twisted.web.resource import Resource
@@ -30,7 +31,7 @@ class WebMessageDisplay(Resource):
                     # multipart/* are just containers
                     if part.get_content_maintype() == 'multipart':
                         continue
-                    parts.append(part.get_payload(decode=True))
+                    parts.append(base64.decode(part.get_payload()))
                 decoded_email_list.append(parts)
 
         data = {'email_list' : decoded_email_list,
