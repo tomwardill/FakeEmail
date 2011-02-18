@@ -3,6 +3,47 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}{% endblock %}</title>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+        <script type="text/javascript">
+            $().ready(function(){
+                $('#pretty').click(function() {
+                    if ($('#pretty:checked').val() !== undefined) {
+                        $('li.part').prepend('<span class="part">&darr;</a>');
+                        $('span.part').click(function() {
+                            $(this).parent().children('div.part').toggle();
+                        });
+                        $('div.part').hide();
+                        $('div.part').css('width', '900');
+                        $('div.part').css('font-family', 'sans, arial, sans-serif');
+                        $('div.part').css('white-space', 'normal');
+                        $('div.part').css('border', '1px solid c0c0c0');
+                    }
+                    else {
+                        $('span.part').remove();
+                        $('div.part').show();
+                        $('div.part').css('width', '100%');
+                        $('div.part').css('font-family', '');
+                        $('div.part').css('white-space', 'pre');
+                        $('div.part').css('border', '');
+                    }
+                });
+
+            });
+        </script>
+        <style type="text/css">
+            body {
+                font-family: monospace;
+            }
+
+            span.part {
+                color: red;
+                font-size: 24pt;
+            }
+
+            div.part {
+                white-space: pre;
+            }
+        </style>
     </head>
     <body>
     
