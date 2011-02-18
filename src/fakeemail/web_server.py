@@ -32,7 +32,11 @@ class WebMessageDisplay(Resource):
                     if part.get_content_maintype() == 'multipart':
                         continue
 
-                    parts.append(part.get_payload(decode=True))
+                    payload = part.get_payload(decode=True)
+                    if not isinstance(payload, unicode):
+                        payload = unicode(payload, 'utf-8')
+
+                    parts.append(payload)
                 decoded_email_list.append(parts)
 
         data = {'email_list' : decoded_email_list,
