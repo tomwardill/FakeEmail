@@ -8,30 +8,34 @@
 
 
     {% if email_list %}
-    
         <div id="nav">
         {% for message in email_list %}
             <a href='#{{ loop.index }}'>{{ loop.index }}</a>
         {% endfor %}
         </div>
-        <div>
-        <label for="pretty">Pretty-mode?</label><input id="pretty" type="checkbox" />
-        </div>
     
-        <ol>
+        <table>
+        <thead>
+            <th>Msg ID</th>
+            <th>Format</th>
+            <th>Headers</th>
+            <th>Content</th>
+        </thead>
             {% for msg in email_list %}
-                <li>
-                    <a name='{{ loop.index }}'>#</a>
-                    <ul>
-                        {% for part in msg %}
-                            <li class="part">
-                                <div class="part">{{ part }}</div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </li>
+                <tr>
+                    <td><a name='{{ loop.index }}'>{{ loop.index }}</a></td>
+                    <td>{{ msg['content_type'] }}</td>
+                            <td class="headers">
+                                {% for header in msg['headers'] %}
+                                {{header[0]}} {{header[1]}} <br />
+                                {% endfor %}
+                            </td>
+                            <td class="payload">
+                                {{ msg['payload'] }}
+                            </td>
+                </tr>
             {% endfor %}
-        </ol>
+        </table>
     {% else %}
         <pre>No emails recorded for this address</pre>
     {% endif %}

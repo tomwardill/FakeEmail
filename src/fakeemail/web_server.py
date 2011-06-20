@@ -24,9 +24,10 @@ class WebMessageDisplay(Resource):
         decoded_email_list = []
         if email_list:
             for mail in email_list:
-                parts = []
-                parts.append(mail)
+                parts = {}
                 msg = email.message_from_string(mail.encode())
+                parts['headers'] = msg.items()
+                parts['content_type'] = msg.get_content_type()
                 for part in msg.walk():
                     # multipart/* are just containers
                     if part.get_content_maintype() == 'multipart':
@@ -36,7 +37,7 @@ class WebMessageDisplay(Resource):
                     if not isinstance(payload, unicode):
                         payload = unicode(payload, 'utf-8')
 
-                    parts.append(payload)
+                    parts['payload'] = payload
                 decoded_email_list.append(parts)
 
         data = {'email_list' : decoded_email_list,
