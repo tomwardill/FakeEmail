@@ -137,8 +137,9 @@ class WebMessageRouter(Resource):
         else:
             return WebMessageRootDisplay(name, self.storage)
         
-def makeWebService(web_port, storage):
+def makeWebService(web_interface, web_port, storage):
     root = WebMessageRouter(storage)
     siteFactory = Site(root)
-    webService = internet.TCPServer(web_port, siteFactory)
+    webService = internet.TCPServer(web_port, siteFactory,
+                                    interface=web_interface)
     return webService
