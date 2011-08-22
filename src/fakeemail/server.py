@@ -38,6 +38,7 @@ class Options(usage.Options):
     optParameters = [
         ["smtp_port", "s", 2025, "SMTP Server Port"],
         ["web_port", "w", 8000 ,"Web Server Port"],
+        ["web_interface", "i", "127.0.0.1", "Web Server Interface"],
         ]
     
 
@@ -49,11 +50,12 @@ def makeService(config):
 
     smtp_port = int(config.get('smtp_port'))
     web_port = int(config.get('web_port'))
+    web_interface = config.get('web_interface')
     
     smtpService = makeSMTPService(smtp_port, storage)
     smtpService.setServiceParent(s)
 
-    webService = makeWebService(web_port, storage)
+    webService = makeWebService(web_interface, web_port, storage)
     webService.setServiceParent(s)
 
     return s
