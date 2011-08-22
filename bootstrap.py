@@ -132,6 +132,9 @@ parser.add_option("-t", "--accept-buildout-test-releases",
 parser.add_option("-c", None, action="store", dest="config_file",
                    help=("Specify the path to the buildout configuration "
                          "file to be used."))
+parser.add_option("-e", "--distribute-version", action="store", dest="distribute_version",
+                   help=("Specify the version for distribute."))
+
 
 options, args = parser.parse_args()
 
@@ -154,6 +157,7 @@ if options.accept_buildout_test_releases:
     args.append('buildout:accept-buildout-test-releases=true')
 args.append('bootstrap')
 
+
 try:
     import pkg_resources
     import setuptools # A flag.  Sometimes pkg_resources is installed alone.
@@ -165,6 +169,8 @@ except ImportError:
     ez = {}
     exec ez_code in ez
     setup_args = dict(to_dir=eggs_dir, download_delay=0)
+    if options.distribute_version:
+        setup_args['version'] = options.distribute_version
     if options.download_base:
         setup_args['download_base'] = options.download_base
     if options.use_distribute:
