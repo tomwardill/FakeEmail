@@ -13,7 +13,7 @@ Installation
 Via pip
 ~~~~~~~
 
-FakeEmail is installable via pip:
+FakeEmail is installable via pip::
 
   pip install fakeemail
 
@@ -35,7 +35,7 @@ Usage
 From pip install
 ~~~~~~~~~~~~~~~~
 
-If you installed fakeemail via pip, then running is simple:
+If you installed fakeemail via pip, then running is simple::
 
   fakeemail 2025 8080 0.0.0.0
 
