@@ -3,6 +3,7 @@ from twisted.mail import smtp
 from twisted.internet import defer, protocol
 from twisted.application import internet, service
 
+
 class WebMessageDelivery:
     implements(smtp.IMessageDelivery)
 
@@ -42,6 +43,7 @@ class WebMessage:
         # some form of error, throw it all away
         self.lines = None
 
+
 class WebMessageDeliveryFactory(object):
     implements(smtp.IMessageDeliveryFactory)
 
@@ -65,9 +67,10 @@ class WebMessageESMTPFactory(protocol.ServerFactory):
         p.deliveryFactory = WebMessageDeliveryFactory(self.storage)
         p.factory = self
         return p
-    
+
+
 def makeSMTPService(smtp_port, storage):
     smtpServerFactory = WebMessageESMTPFactory(storage)
     smtpService = internet.TCPServer(smtp_port, smtpServerFactory)
-    
+
     return smtpService
