@@ -4,7 +4,7 @@ from twisted.application import service
 from twisted.python import usage
 
 from smtp_server import WebMessageESMTPFactory, makeSMTPService
-from web_server import WebMessageRouter, makeWebService
+from web_server import WebMessageRouter, Site, makeWebService
 
 class WebMessageStorage(object):
 
@@ -59,4 +59,30 @@ def makeService(config):
     webService.setServiceParent(s)
 
     return s
+
+def start(config=None):
+
+    if not config:
+        import argparse
+        parser = argparse.ArgumentParser()
+        parser.add_argument("smtp_port", help="SMTP Port", type=int)
+        parser.add_argument("web_port", help="Web Port", type=int)
+        parser.add_argument("web_interface", help="Listening interface for web")
+        args = parser.parse_args()
+
+        config = {
+            'smtp_port': args.smtp_port,
+            'web_port': args.web_port,
+            'web_interface': args.web_interface
+        }
+
+    from twisted.internet import reactor
+    storage = WebMessageStorage()
+    smtp_factory = WebMessageESMTPFactory(storage)
+    root = WebMessageRouter(storage)
+
+    reactor.listenTCP(config['smtp_port'], smtp_factory)
+    reactor.listenTCP(config['web_port'], Site(root), interface=config['web_interface'])
+
+    reactor.run()
 

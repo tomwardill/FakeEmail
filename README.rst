@@ -4,11 +4,22 @@ FakeEmail
 
 FakeEmail is an email server, for use in a development environment where routing email is either undesirable, or impossible to manage.
 
-The aim of the system is to sit on a port, accept SMTP connections and to display a list of the emails that it has received. 
+The aim of the system is to open a port, accept SMTP connections and to display a list of the emails that it has received. 
 At no point will the emails route further on, so there is no requirement for the addresses to be valid, or to wait around waiting for the email to arrive in your inbox.
 
 Installation
 ------------
+
+Via pip
+~~~~~~~
+
+FakeEmail is installable via pip:
+```bash
+pip install fakeemail
+```
+
+From Source
+~~~~~~~~~~~
 
 FakeEmail is installed using the buildout system and depends on Twisted for it's server capabilites. Installation is as straight forward as possible::
 
@@ -20,6 +31,20 @@ FakeEmail is installed using the buildout system and depends on Twisted for it's
   
 Usage
 -----
+
+From pip install
+~~~~~~~~~~~~~~~~
+
+If you installed fakeemail via pip, then running is simple:
+
+```bash
+fakeemail 2025 8080 0.0.0.0
+```
+
+This will run on SMTP port `2025`, the web interface on `8080` and listen on all network interfaces. Running on port 25 is possible, but you will need to start with root privileges.
+
+Installed from source
+~~~~~~~~~~~~~~~~~~~~~
 
 FakeEmail installs itself as a plugin into the local buildout twisted environment. This makes execution reasonably simple::
 
