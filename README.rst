@@ -14,9 +14,9 @@ Via pip
 ~~~~~~~
 
 FakeEmail is installable via pip:
-```bash
-pip install fakeemail
-```
+
+  pip install fakeemail
+
 
 From Source
 ~~~~~~~~~~~
@@ -37,9 +37,8 @@ From pip install
 
 If you installed fakeemail via pip, then running is simple:
 
-```bash
-fakeemail 2025 8080 0.0.0.0
-```
+  fakeemail 2025 8080 0.0.0.0
+
 
 This will run on SMTP port `2025`, the web interface on `8080` and listen on all network interfaces. Running on port 25 is possible, but you will need to start with root privileges.
 
