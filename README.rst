@@ -21,7 +21,7 @@ FakeEmail is installable via pip::
 From Source
 ~~~~~~~~~~~
 
-FakeEmail is installed using the buildout system and depends on Twisted for it's server capabilites. Installation is as straight forward as possible::
+FakeEmail is installed using the setup.py and depends on Twisted for it's server capabilites. Installation is as straight forward as possible::
 
   git clone git://github.com/tomwardill/FakeEmail.git
   cd FakeEmail
