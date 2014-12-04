@@ -25,7 +25,7 @@ FakeEmail is installed using the setup.py and depends on Twisted for it's server
 
   git clone git://github.com/tomwardill/FakeEmail.git
   cd FakeEmail
-  python setupy.py install
+  python setup.py install
   
   
 Usage
