@@ -67,7 +67,7 @@ The dependencies will be installed through the egg, but if you require them to b
  * jinja2
  * python (2.4+)
 
- Known Issues
- ------------
+Known Issues
+------------
 
- The use of `srcdoc` for the iframe element of displaying HTML emails will not work in any current version of Internet Explorer.
+The use of `srcdoc` for the iframe element of displaying HTML emails will not work in any current version of Internet Explorer.
