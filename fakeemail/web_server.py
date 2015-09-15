@@ -27,7 +27,7 @@ class WebMessageDisplay(Resource):
         if email_list:
             for mail in email_list:
                 parts = {}
-                msg = email.message_from_string(mail.encode())
+                msg = email.message_from_string(mail.encode('UTF-8'))
                 parts['headers'] = msg.items()
                 parts['content_type'] = msg.get_content_type()
                 for part in msg.walk():
