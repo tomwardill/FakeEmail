@@ -1,7 +1,8 @@
-from zope.interface import implements
+from __future__ import print_function
 
 from twisted.application import service
 from twisted.python import usage
+from zope.interface import implements
 
 from smtp_server import WebMessageESMTPFactory, makeSMTPService
 from web_server import WebMessageRouter, Site, makeWebService
@@ -17,7 +18,7 @@ class WebMessageStorage(object):
         else:
             self.messages[unicode(to.dest)] = [message.decode('UTF-8')]
 
-        print "Message stored for: " + unicode(to.dest)
+        print("Message stored for: " + unicode(to.dest))
 
     def get_for_name(self, name):
         if name in self.messages:
@@ -39,7 +40,7 @@ class Options(usage.Options):
         ["smtp_port", "s", 2025, "SMTP Server Port"],
         ["web_port", "w", 8000, "Web Server Port"],
         ["web_interface", "i", "127.0.0.1", "Web Server Interface"],
-        ]
+    ]
 
 
 def makeService(config):

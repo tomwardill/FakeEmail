@@ -23,6 +23,7 @@ class WebMessageDisplay(Resource):
     def render_GET(self, request):
         email_list = self.storage.get_for_name(self.name)
         decoded_email_list = []
+        available_content_types = set()
         if email_list:
             for mail in email_list:
                 parts = {}
@@ -38,11 +39,13 @@ class WebMessageDisplay(Resource):
                     if not isinstance(payload, unicode):
                         payload = unicode(payload, 'utf-8')
 
-                    parts['payload'] = payload
+                    parts[part.get_content_subtype()] = payload
+                    available_content_types.add(part.get_content_subtype())
                 decoded_email_list.append(parts)
 
         data = {'email_list': decoded_email_list,
-                'address_name': self.name, }
+                'address_name': self.name,
+                'content_types': list(available_content_types)}
 
         env = Environment(loader=PackageLoader('fakeemail', 'templates'))
         template = env.get_template('message_display.html')

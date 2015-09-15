@@ -13,32 +13,46 @@
             <a href='#{{ loop.index }}'>{{ loop.index }}</a>
         {% endfor %}
         </div>
-    
+
         <table>
         <thead>
             <th>Msg ID</th>
             <th>Format</th>
             <th>Headers</th>
-            <th>Content</th>
+            {% for type in content_types %}
+            <th>{{ type }}</th>
+            {% endfor %}
         </thead>
             {% for msg in email_list %}
                 <tr>
                     <td><a name='{{ loop.index }}'>{{ loop.index }}</a></td>
                     <td>{{ msg['content_type'] }}</td>
-                            <td class="headers">
-                                {% for header in msg['headers'] %}
-                                {{header[0]}} {{header[1]}} <br />
-                                {% endfor %}
-                            </td>
-                            <td class="payload">
-                                {{ msg['payload'] }}
-                            </td>
+                    <td class="headers">
+                        {% for header in msg['headers'] %}
+                        {{header[0]}} {{header[1]}} <br />
+                        {% endfor %}
+                    </td>
+                    {% for type in content_types %}
+                    {% if type in msg and type != 'html' %}
+                    <td class="payload">
+                    <pre>
+                        {{msg[type]}}
+                    </pre>
+                    </td>
+                    {% elif type == 'html' %}
+                    <td class="payload">
+                     <iframe srcdoc='{{ msg['html']|e }}'>
+                     </iframe>
+                    </td>
+                    {% endif %}
+
+                    {% endfor %}
                 </tr>
             {% endfor %}
         </table>
     {% else %}
         <pre>No emails recorded for this address</pre>
     {% endif %}
-    
+
 
 {% endblock %}

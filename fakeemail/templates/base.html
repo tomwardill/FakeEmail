@@ -18,24 +18,39 @@
             div.part {
                 white-space: pre;
             }
+
             td {
                 padding: 10px;
+            }
+
+            td.headers {
+                width: 100px;
+            }
+
+            pre {
+                width: 500px;
+                overflow-x:scroll;
+            }
+
+            iframe {
+                width: 400px;
+                height: 400px;
             }
         </style>
     </head>
     <body>
-    
+
     <h1>Fake Email Server</h1>
-    
+
         {% if user_message %}
         <div id = 'user_message'>
             <span>{{ user_message }}</span>
         </div>
         {% endif %}
-    
+
         {% block content %}
         {% endblock %}
-        
+
         {% if address_name %}
         Access data api at <a href="/data/{{ address_name }}">/data/{{ address_name }}</a>
         {% endif %}
