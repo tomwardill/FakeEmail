@@ -1,9 +1,9 @@
-import email
-import base64
+import os
 
 from twisted.web.server import Site
 from twisted.web.resource import Resource
 from twisted.application import internet, service
+from twisted.web.static import File
 
 from jinja2 import Environment, PackageLoader
 
@@ -25,22 +25,35 @@ class WebMessageDisplay(Resource):
         decoded_email_list = []
         available_content_types = set()
         if email_list:
-            for mail in email_list:
+            for msg, attachments in email_list:
                 parts = {}
-                msg = email.message_from_string(mail.encode('UTF-8'))
                 parts['headers'] = msg.items()
                 parts['content_type'] = msg.get_content_type()
                 for part in msg.walk():
-                    # multipart/* are just containers
-                    if part.get_content_maintype() == 'multipart':
+                    # multipart/* are just containers, and things that
+                    # don't start with 'text/' are assumed to be
+                    # attachments
+                    if (part.get_content_maintype() == 'multipart') or (not msg.get_content_type().startswith('text/')):
                         continue
 
-                    payload = part.get_payload(decode=True)
-                    if not isinstance(payload, unicode):
-                        payload = unicode(payload, 'utf-8')
+                    content_type = part.get_content_type()
+                    # Assume that any non-text types are just attachments
+                    if content_type.startswith('text/'):
+                        payload = part.get_payload(decode=True)
+                        if isinstance(payload, unicode):
+                            output = payload
+                        else:
+                            output = unicode(payload, 'utf-8')
 
-                    parts[part.get_content_subtype()] = payload
+                    parts[part.get_content_subtype()] = output
                     available_content_types.add(part.get_content_subtype())
+
+                # Output the names of the attachments.
+                for i, attachment_path in enumerate(attachments, start=1):
+                    heading = 'attachment {}'.format(i)
+                    parts[heading] = os.path.basename(attachment_path)
+                    available_content_types.add(heading)
+
                 decoded_email_list.append(parts)
 
         data = {'email_list': decoded_email_list,
@@ -86,8 +99,11 @@ class WebDataMessageDisplay(Resource):
         self.storage = storage
 
     def render_GET(self, request):
+        # Don't try to output the attachments over the data api.
+        email_and_attachment_list = self.storage.get_for_name(self.name)
+        email_list = [str(email) for email, _ in email_and_attachment_list]
 
-        data = {'email_list': self.storage.get_for_name(self.name),
+        data = {'email_list': email_list,
                 'address_name': self.name, }
 
         env = Environment(loader=PackageLoader('fakeemail', 'templates'))
@@ -130,14 +146,17 @@ class WebDataRootDisplay(Resource):
 
 class WebMessageRouter(Resource):
 
-    def __init__(self, storage):
+    def __init__(self, storage, temp_dir):
         Resource.__init__(self)
         self.storage = storage
+        self.temp_dir = temp_dir
 
     def getChild(self, name, request):
         if name:
             if name == 'data':
                 return WebDataRootDisplay('', self.storage)
+            elif name == 'file':
+                return File(self.temp_dir)
 
             return WebMessageDisplay(name, self.storage)
         else:

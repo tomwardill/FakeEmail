@@ -35,9 +35,15 @@
                     {% for type in content_types %}
                     {% if type in msg and type != 'html' %}
                     <td class="payload">
-                    <pre>
+                      {% if type.startswith('attachment') %}
+                      <a href="file/{{msg[type]}}" target="_blank">
                         {{msg[type]}}
-                    </pre>
+                      </a>
+                      {% else %}
+                      <pre>
+                        {{msg[type]}}
+                      </pre>
+                      {% endif %}
                     </td>
                     {% elif type == 'html' %}
                     <td class="payload">
