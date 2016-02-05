@@ -71,3 +71,10 @@ Known Issues
 ------------
 
 The use of `srcdoc` for the iframe element of displaying HTML emails will not work in any current version of Internet Explorer.
+
+Credits
+-------
+
+Tom Wardill (original author) - https://github.com/tomwardill
+Andrew Plummer - https://github.com/plumdog
+John Carr - https://github.com/jc2k
