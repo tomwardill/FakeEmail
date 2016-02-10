@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='fakeemail',
-    version='0.10.0',
+    version='0.10.1',
     author='Tom Wardill',
     author_email='tom@howrandom.net',
     description='A fake Email Server with a Web Front End',
