@@ -33,7 +33,7 @@ class WebMessageDisplay(Resource):
                     # multipart/* are just containers, and things that
                     # don't start with 'text/' are assumed to be
                     # attachments
-                    if (part.get_content_maintype() == 'multipart') or (not msg.get_content_type().startswith('text/')):
+                    if (part.get_content_maintype() == 'multipart') or (not part.get_content_type().startswith('text/')):
                         continue
 
                     content_type = part.get_content_type()
