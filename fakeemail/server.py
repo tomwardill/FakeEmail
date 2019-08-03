@@ -12,6 +12,8 @@ from web_server import WebMessageRouter, Site, makeWebService
 
 
 _TEMPDIR = None
+
+
 def get_tempdir():
     global _TEMPDIR
     if not _TEMPDIR:
@@ -25,7 +27,8 @@ class WebMessageStorage(object):
 
     def addMessage(self, to, message):
         if unicode(to.dest) in self.messages:
-            self.messages[unicode(to.dest)].append(self.process_message(message))
+            self.messages[unicode(to.dest)].append(
+                self.process_message(message))
         else:
             self.messages[unicode(to.dest)] = [self.process_message(message)]
 
@@ -39,7 +42,8 @@ class WebMessageStorage(object):
         attachments_paths = []
         for part in msg.walk():
             content_type = part.get_content_type()
-            if (part.get_content_maintype() != 'multipart') and not content_type.startswith('text/'):
+            if (part.get_content_maintype() !=
+                    'multipart') and not content_type.startswith('text/'):
                 # Then we assume we have an attachment to store
                 fpath = os.path.join(get_tempdir(), part.get_filename())
                 with open(fpath, 'wb') as f:

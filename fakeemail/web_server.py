@@ -9,8 +9,8 @@ from jinja2 import Environment, PackageLoader
 
 try:
     import json
-except:
-        import simplejson as json
+except BaseException:
+    import simplejson as json
 
 
 class WebMessageDisplay(Resource):
