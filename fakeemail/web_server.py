@@ -9,7 +9,7 @@ from jinja2 import Environment, PackageLoader
 
 try:
     import json
-except BaseException:
+except ImportError:
     import simplejson as json
 
 
