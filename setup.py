@@ -12,6 +12,7 @@ setup(
     install_requires=[
         'Twisted',
         'jinja2',
+        'six',
         'zope.interface>=3.6.0',
     ],
     package_data={

@@ -42,10 +42,10 @@ class WebMessageDisplay(Resource):
                     # Assume that any non-text types are just attachments
                     if content_type.startswith('text/'):
                         payload = part.get_payload(decode=True)
-                        if isinstance(payload, unicode):
-                            output = payload
+                        if isinstance(payload, bytes):
+                            output = payload.decode('utf-8')
                         else:
-                            output = unicode(payload, 'utf-8')
+                            output = payload
 
                     parts[part.get_content_subtype()] = output
                     available_content_types.add(part.get_content_subtype())
@@ -143,6 +143,7 @@ class WebDataRootDisplay(Resource):
         return self.internal_render('Data Cleared')
 
     def getChild(self, name, request):
+        name = name.decode('UTF-8', errors='replace')
         return WebDataMessageDisplay(name, self.storage)
 
 
@@ -155,6 +156,7 @@ class WebMessageRouter(Resource):
 
     def getChild(self, name, request):
         if name:
+            name = name.decode('UTF-8', errors='replace')
             if name == 'data':
                 return WebDataRootDisplay('', self.storage)
             elif name == 'file':

@@ -11,7 +11,7 @@ class WebMessageDelivery:
         self.storage = storage
 
     def receivedHeader(self, helo, origin, recipients):
-        return "Recieved: MessageDelivery"
+        return b"Received: MessageDelivery"
 
     def validateFrom(self, helo, origin):
         # take any from address
@@ -34,7 +34,7 @@ class WebMessage:
         self.lines.append(line)
 
     def eomReceived(self):
-        message = "\n".join(self.lines)
+        message = b"\n".join(self.lines)
         self.storage.addMessage(self.user, message)
         self.lines = None
         return defer.succeed(None)
