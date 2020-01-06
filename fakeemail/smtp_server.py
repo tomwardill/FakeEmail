@@ -1,11 +1,11 @@
-from zope.interface import implements
+from zope.interface import implementer
 from twisted.mail import smtp
 from twisted.internet import defer, protocol
 from twisted.application import internet
 
 
+@implementer(smtp.IMessageDelivery)
 class WebMessageDelivery:
-    implements(smtp.IMessageDelivery)
 
     def __init__(self, storage):
         self.storage = storage
@@ -22,8 +22,8 @@ class WebMessageDelivery:
         return lambda: WebMessage(self.storage, user)
 
 
+@implementer(smtp.IMessage)
 class WebMessage:
-    implements(smtp.IMessage)
 
     def __init__(self, storage, user):
         self.lines = []
@@ -44,8 +44,8 @@ class WebMessage:
         self.lines = None
 
 
+@implementer(smtp.IMessageDeliveryFactory)
 class WebMessageDeliveryFactory(object):
-    implements(smtp.IMessageDeliveryFactory)
 
     def __init__(self, storage):
         self.storage = storage

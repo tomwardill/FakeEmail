@@ -12,7 +12,7 @@ setup(
     install_requires=[
         'Twisted',
         'jinja2',
-        'zope.interface',
+        'zope.interface>=3.6.0',
     ],
     package_data={
         'twisted': ['plugins/fakeemail.py'],
