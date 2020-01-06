@@ -1,17 +1,17 @@
-from zope.interface import implements
+from zope.interface import implementer
 from twisted.mail import smtp
 from twisted.internet import defer, protocol
-from twisted.application import internet, service
+from twisted.application import internet
 
 
+@implementer(smtp.IMessageDelivery)
 class WebMessageDelivery:
-    implements(smtp.IMessageDelivery)
 
     def __init__(self, storage):
         self.storage = storage
 
     def receivedHeader(self, helo, origin, recipients):
-        return "Recieved: MessageDelivery"
+        return b"Received: MessageDelivery"
 
     def validateFrom(self, helo, origin):
         # take any from address
@@ -22,8 +22,8 @@ class WebMessageDelivery:
         return lambda: WebMessage(self.storage, user)
 
 
+@implementer(smtp.IMessage)
 class WebMessage:
-    implements(smtp.IMessage)
 
     def __init__(self, storage, user):
         self.lines = []
@@ -34,7 +34,7 @@ class WebMessage:
         self.lines.append(line)
 
     def eomReceived(self):
-        message = "\n".join(self.lines)
+        message = b"\n".join(self.lines)
         self.storage.addMessage(self.user, message)
         self.lines = None
         return defer.succeed(None)
@@ -44,8 +44,8 @@ class WebMessage:
         self.lines = None
 
 
+@implementer(smtp.IMessageDeliveryFactory)
 class WebMessageDeliveryFactory(object):
-    implements(smtp.IMessageDeliveryFactory)
 
     def __init__(self, storage):
         self.storage = storage

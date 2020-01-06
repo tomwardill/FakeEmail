@@ -1,14 +1,19 @@
-from __future__ import print_function
-import email
+from __future__ import absolute_import, print_function
+
+try:
+    from email import message_from_bytes
+except ImportError:
+    # Python < 3.2
+    from email import message_from_string as message_from_bytes
 import os
 import tempfile
 
+import six
 from twisted.application import service
 from twisted.python import usage
-from zope.interface import implements
 
-from smtp_server import WebMessageESMTPFactory, makeSMTPService
-from web_server import WebMessageRouter, Site, makeWebService
+from fakeemail.smtp_server import WebMessageESMTPFactory, makeSMTPService
+from fakeemail.web_server import WebMessageRouter, Site, makeWebService
 
 
 _TEMPDIR = None
@@ -26,19 +31,20 @@ class WebMessageStorage(object):
     messages = {}
 
     def addMessage(self, to, message):
-        if unicode(to.dest) in self.messages:
-            self.messages[unicode(to.dest)].append(
+        dest = six.text_type(to.dest)
+        if dest in self.messages:
+            self.messages[dest].append(
                 self.process_message(message))
         else:
-            self.messages[unicode(to.dest)] = [self.process_message(message)]
+            self.messages[dest] = [self.process_message(message)]
 
-        print("Message stored for: " + unicode(to.dest))
+        print("Message stored for: " + dest)
 
     def process_message(self, message):
         # Unpack each message and store the attachments to a temporary
         # directory, and retain the local path where we have stored
         # them. Return the message and the list of local paths.
-        msg = email.message_from_string(message)
+        msg = message_from_bytes(message)
         attachments_paths = []
         for part in msg.walk():
             content_type = part.get_content_type()

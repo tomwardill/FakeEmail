@@ -10,12 +10,20 @@ setup(
     zip_safe=True,
     packages=['fakeemail', 'twisted.plugins'],
     install_requires=[
-        'Twisted', 'jinja2',
+        'Twisted',
+        'jinja2',
+        'six',
+        'zope.interface>=3.6.0',
     ],
     package_data={
         'twisted': ['plugins/fakeemail.py'],
         'fakeemail': ['templates/*']
         },
+    classifiers=[
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
+    ],
     entry_points={
         'console_scripts': [
             'fakeemail=fakeemail.server:start'
