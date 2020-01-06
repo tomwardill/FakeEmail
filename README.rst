@@ -78,3 +78,5 @@ Credits
 Tom Wardill (original author) - https://github.com/tomwardill
 Andrew Plummer - https://github.com/plumdog
 John Carr - https://github.com/jc2k
+Tapasweni Pathak - https://github.com/tapaswenipathak
+Colin Watson - https://github.com/cjwatson
