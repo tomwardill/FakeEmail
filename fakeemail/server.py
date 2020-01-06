@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 import email
 import os
 import tempfile
@@ -7,8 +7,8 @@ from twisted.application import service
 from twisted.python import usage
 from zope.interface import implements
 
-from smtp_server import WebMessageESMTPFactory, makeSMTPService
-from web_server import WebMessageRouter, Site, makeWebService
+from fakeemail.smtp_server import WebMessageESMTPFactory, makeSMTPService
+from fakeemail.web_server import WebMessageRouter, Site, makeWebService
 
 
 _TEMPDIR = None
