@@ -2,7 +2,7 @@ import os
 
 from twisted.web.server import Site
 from twisted.web.resource import Resource
-from twisted.application import internet, service
+from twisted.application import internet
 from twisted.web.static import File
 
 from jinja2 import Environment, PackageLoader

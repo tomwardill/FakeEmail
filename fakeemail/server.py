@@ -5,7 +5,6 @@ import tempfile
 
 from twisted.application import service
 from twisted.python import usage
-from zope.interface import implements
 
 from fakeemail.smtp_server import WebMessageESMTPFactory, makeSMTPService
 from fakeemail.web_server import WebMessageRouter, Site, makeWebService
