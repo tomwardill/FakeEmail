@@ -19,6 +19,11 @@ setup(
         'twisted': ['plugins/fakeemail.py'],
         'fakeemail': ['templates/*']
         },
+    classifiers=[
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
+    ],
     entry_points={
         'console_scripts': [
             'fakeemail=fakeemail.server:start'
